@@ -1,0 +1,10 @@
+# compiled files
+*.o
+mysh
+
+# temporary files
+*~
+*.swp
+
+# mac/linux junk
+.DS_Store
