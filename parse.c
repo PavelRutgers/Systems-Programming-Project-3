@@ -3,6 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+static int is_special_token(const char *s) {
+    return strcmp(s, "<") == 0 ||
+           strcmp(s, ">") == 0 ||
+           strcmp(s, "|") == 0;
+}
+
 void free_job(job_t *job) {
     size_t i;
     size_t j;
@@ -58,11 +64,21 @@ int parse_tokens(const token_list_t *tokens, job_t *job) {
     }
 
     for (i = 0; i < tokens->size; i++) {
+        if (strcmp(tokens->items[i], "|") == 0) {
+            free_job(job);
+            return -1;
+        }
+
         if (strcmp(tokens->items[i], "<") == 0) {
-            if (i + 1 >= tokens->size) {
+            if (cmd->input_file != NULL) {
                 free_job(job);
                 return -1;
             }
+            if (i + 1 >= tokens->size || is_special_token(tokens->items[i + 1])) {
+                free_job(job);
+                return -1;
+            }
+
             cmd->input_file = malloc(strlen(tokens->items[i + 1]) + 1);
             if (cmd->input_file == NULL) {
                 free_job(job);
@@ -71,10 +87,15 @@ int parse_tokens(const token_list_t *tokens, job_t *job) {
             strcpy(cmd->input_file, tokens->items[i + 1]);
             i++;
         } else if (strcmp(tokens->items[i], ">") == 0) {
-            if (i + 1 >= tokens->size) {
+            if (cmd->output_file != NULL) {
                 free_job(job);
                 return -1;
             }
+            if (i + 1 >= tokens->size || is_special_token(tokens->items[i + 1])) {
+                free_job(job);
+                return -1;
+            }
+
             cmd->output_file = malloc(strlen(tokens->items[i + 1]) + 1);
             if (cmd->output_file == NULL) {
                 free_job(job);
@@ -91,6 +112,11 @@ int parse_tokens(const token_list_t *tokens, job_t *job) {
             strcpy(cmd->argv[argc], tokens->items[i]);
             argc++;
         }
+    }
+
+    if (argc == 0) {
+        free_job(job);
+        return -1;
     }
 
     cmd->argv[argc] = NULL;

@@ -39,7 +39,6 @@ int main(int argc, char *argv[]) {
     while (!shell.should_exit) {
         token_list_t tokens;
         job_t job;
-        size_t i;
 
         if (shell.interactive) {
             print_prompt(&shell);
@@ -74,22 +73,13 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        printf("command count = %zu\n", job.count);
-    for (i = 0; i < job.commands[0].argc; i++) {
-        printf("argv[%zu] = \"%s\"\n", i, job.commands[0].argv[i]);
-    }
-    if (job.commands[0].input_file != NULL) {
-        printf("input_file = \"%s\"\n", job.commands[0].input_file);
-    }
-    if (job.commands[0].output_file != NULL) {
-        printf("output_file = \"%s\"\n", job.commands[0].output_file);
-    }
-
         if (job.count > 0 &&
-            job.commands[0].argc > 0 &&
-            strcmp(job.commands[0].argv[0], "exit") == 0) {
-            shell.should_exit = 1;
-        }
+    job.commands[0].argc > 0 &&
+    strcmp(job.commands[0].argv[0], "exit") == 0) {
+    shell.should_exit = 1;
+} else {
+    shell.last_status = execute_job(&shell, &job);
+}
 
         free_job(&job);
         free_tokens(&tokens);

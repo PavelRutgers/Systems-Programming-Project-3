@@ -44,5 +44,12 @@ void free_tokens(token_list_t *tokens);
 
 int parse_tokens(const token_list_t *tokens, job_t *job);
 void free_job(job_t *job);
+char *resolve_command_path(const char *name);
+
+int is_builtin(const char *name);
+int run_builtin(shell_t *shell, const command_t *cmd);
+
+int apply_redirection(const command_t *cmd);
+int run_builtin_with_redirection(shell_t *shell, const command_t *cmd);
 
 #endif
