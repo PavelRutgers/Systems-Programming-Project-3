@@ -72,14 +72,20 @@ int main(int argc, char *argv[]) {
             free_tokens(&tokens);
             continue;
         }
+        if (expand_job(&job) != 0) {
+            fprintf(stderr, "wildcard error\n");
+            free_job(&job);
+            free_tokens(&tokens);
+            continue;
+        }
 
         if (job.count > 0 &&
-    job.commands[0].argc > 0 &&
-    strcmp(job.commands[0].argv[0], "exit") == 0) {
-    shell.should_exit = 1;
-} else {
-    shell.last_status = execute_job(&shell, &job);
-}
+            job.commands[0].argc > 0 &&
+            strcmp(job.commands[0].argv[0], "exit") == 0) {
+            shell.should_exit = 1;
+        } else {
+            shell.last_status = execute_job(&shell, &job);
+        }   
 
         free_job(&job);
         free_tokens(&tokens);

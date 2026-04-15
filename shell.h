@@ -51,5 +51,7 @@ int run_builtin(shell_t *shell, const command_t *cmd);
 
 int apply_redirection(const command_t *cmd);
 int run_builtin_with_redirection(shell_t *shell, const command_t *cmd);
+int execute_job(shell_t *shell, const job_t *job);
+int expand_job(job_t *job);
 
 #endif
