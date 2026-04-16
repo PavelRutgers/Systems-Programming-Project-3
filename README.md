@@ -3,7 +3,7 @@ Names: Pavel Sverdlov, Nyssa Rawat
 NetIDs: ps1329, nr649
 
 Summary: 
-This project simulates a simple UNIX shell in C. The shell reads input using read() system call, tokenizes the input, parses it into structured commands, and executes commands. The program supports pipelines, redirection, wildcard expansion, and built in c commands like cd or ls. The shell operates in an interactive mode, mimicking the real shell terminal, and batch mode, which takes several commands all at once and executes all of them. In interactive mode, mysh prints a welcome and goodbye message, which it does not do in batch mode.
+This project simulates a simple UNIX shell in C. The shell reads input using read() system call, tokenizes the input, parses it into structured commands, and executes commands. The program supports pipelines, redirection, wildcard expansion, and built in c commands like cd pwd or which. The shell operates in an interactive mode, mimicking the real shell terminal, and batch mode, which takes several commands all at once and executes all of them. In interactive mode, mysh prints a welcome and goodbye message, which it does not do in batch mode.
 
 Design: 
 The shell processes each line of input in multiple stages. First, input is read using shell_read_line, which wraps the read() system call. The line is then tokenized into a list of strings, split on whitespace and special symbols. The parser converts tokens into a structured job_t, which contains one or more command_t entries for pipelines. After parsing, wildcard expansion is performed on each command's arguments. Finally, the job is executed as either a command or a pipeline of commands.
